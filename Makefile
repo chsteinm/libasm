@@ -1,9 +1,9 @@
 NAME = libasm.a
 ASMFLAGS = -felf64
-SRCS = 	ft_strlen.s
-OBJ = $(addprefix $(BUILD_DIR)/,$(SRCS:.s=.o))
+SRCS = 	strlen strcpy
+OBJ = $(addprefix $(BUILD_DIR)/ft_,$(addsuffix .o,$(SRCS)))
 SRCS_BONUS =	
-OBJ_BONUS = $(addprefix $(BUILD_DIR)/,$(SRCS_BONUS:.s=.o))
+OBJ_BONUS = $(addprefix $(BUILD_DIR)/ft_,$(SRCS_BONUS))
 BUILD_DIR = .build
 -include $(OBJ:.o=.d) $(OBJ_BONUS:.o=.d)
 
