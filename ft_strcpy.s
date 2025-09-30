@@ -2,7 +2,7 @@ section .text
     global  ft_strcpy
 
 ft_strcpy:
-    mov     rax, rdi
+        mov     rax, rdi
     .loop:
         cmp byte [rsi], 0
         je  .end

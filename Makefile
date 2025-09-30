@@ -1,6 +1,6 @@
 NAME = libasm.a
 ASMFLAGS = -felf64
-SRCS = 	strlen strcpy strcmp write
+SRCS = 	strlen strcpy strcmp write read
 OBJ = $(addprefix $(BUILD_DIR)/ft_,$(addsuffix .o,$(SRCS)))
 SRCS_BONUS =	
 OBJ_BONUS = $(addprefix $(BUILD_DIR)/ft_,$(SRCS_BONUS))
