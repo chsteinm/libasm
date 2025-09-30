@@ -40,6 +40,8 @@ AL  CL  DL  BL  SPL BPL SIL DIL
 ; 128-bit (used for floating point operations mostly)
 XMM0 ... XMM15
 
+Mémo:
+Accumulateur ; Compteur ; Donnée ; Base ; Pointeur Pile ; Base Pointeur Base ; Indice Source ; Indice Destination
 
 ; Save register
 push	REG
