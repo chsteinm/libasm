@@ -1,6 +1,6 @@
 NAME = libasm.a
 ASMFLAGS = -felf64
-SRCS = 	strlen strcpy strcmp
+SRCS = 	strlen strcpy strcmp write
 OBJ = $(addprefix $(BUILD_DIR)/ft_,$(addsuffix .o,$(SRCS)))
 SRCS_BONUS =	
 OBJ_BONUS = $(addprefix $(BUILD_DIR)/ft_,$(SRCS_BONUS))
@@ -25,7 +25,7 @@ $(BUILD_DIR)/%.o: %.s Makefile
 
 # For compile the test main.c
 main: $(NAME) main.c
-	cc -o main main.c $(NAME)
+	cc -g -o main main.c $(NAME)
 
 clean:
 	rm -rf $(BUILD_DIR)

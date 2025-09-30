@@ -1,10 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
+#include <unistd.h>
+#include <errno.h>
 
 int64_t ft_strlen(const char* str);
 char* ft_strcpy(char* dest, const char* src);
 int ft_strcmp(const char* s1, const char* s2);
+ssize_t ft_write(int fd, const void* buf, size_t count);
 
 int main(int argc, char** argv) {
     printf("Testing ft_strlen vs strlen from libc (add some argv for more tests):\n\n");
@@ -34,5 +37,23 @@ int main(int argc, char** argv) {
         int cmp_asm = ft_strcmp(str1, str2);
         printf("ft_strcmp: %d\n\n", cmp_asm);
     }
+    printf("\nTesting ft_write vs strcpy from libc:\n");
+    for (int i = 0; i < argc; i++) {
+        char* str = argv[i];
+        dprintf(1, "\nC Write: '");
+        ssize_t res = write(1, str, strlen(str));
+        printf("'\nReturn: %ld\n", res);
+        dprintf(1, "\nft_write: '");
+        ssize_t res_asm = ft_write(1, str, strlen(str));
+        printf("'\nReturn: %ld\n\n", res_asm);
+    }
+    printf("\nTest errno with C write (fd = -1):\n");
+    errno = 0; // reset errno
+    ssize_t ret = write(-1, "test", 4);
+    printf("Return: %ld, errno: %d (%s)\n", ret, errno, strerror(errno));
+    printf("\nTest errno with ft_write (fd = -1):\n");
+    errno = 0; // reset errno
+    ret = ft_write(-1, "test", 4);
+    printf("Return: %ld, errno: %d (%s)\n", ret, errno, strerror(errno));
     return 0;
 }
