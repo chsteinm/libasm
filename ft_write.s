@@ -6,14 +6,16 @@ section .text
     global  ft_write
 
 ft_write:
-        mov rax, SYS_WRITE
+        mov     rax, SYS_WRITE
         syscall
         cmp     rax, 0
         jge     .end
         neg     rax
-        mov     rcx, rax
+        mov     rdi, rax
+        sub     rsp, 8
         call    __errno_location
-        mov     [rax], ecx      ; *errno = error code
+        add     rsp, 8
+        mov     [rax], rdi      ; *errno = error code
         mov     rax, -1
     .end:
         ret

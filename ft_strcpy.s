@@ -4,13 +4,13 @@ section .text
 ft_strcpy:
         mov     rax, rdi
     .loop:
-        cmp byte [rsi], 0
-        je  .end
-        mov al, [rsi]
-        mov [rdi], al
-        inc rdi
-        inc rsi
-        jmp .loop
+        cmp     byte [rsi], 0
+        je      .end
+        mov     dl, [rsi]
+        mov     [rdi], dl
+        inc     rdi
+        inc     rsi
+        jmp     .loop
     .end:
-        mov byte [rdi], 0
+        mov     byte [rdi], 0
         ret

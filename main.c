@@ -3,12 +3,14 @@
 #include <inttypes.h>
 #include <unistd.h>
 #include <errno.h>
+#include <stdlib.h>
 
 size_t ft_strlen(const char* str);
 char* ft_strcpy(char* dest, const char* src);
 int ft_strcmp(const char* s1, const char* s2);
 ssize_t ft_write(int fd, const void* buf, size_t count);
 ssize_t ft_read(int fd, void* buf, size_t count);
+char* ft_strdup(const char* s);
 
 int main(int argc, char** argv) {
     printf("Testing ft_strlen vs strlen from libc (add some argv for more tests):\n\n");
@@ -84,5 +86,16 @@ int main(int argc, char** argv) {
     errno = 0;
     ret_read = ft_read(-1, buffer_asm, 4);
     printf("Return: %ld, errno: %d (%s)\n\n", ret_read, errno, strerror(errno));
+
+    printf("\nTesting ft_strdup vs strdup from libc:\n\n");
+    for (int i = 0; i < argc; i++) {
+        char* str = argv[i];
+        char* dup = strdup(str);
+        printf("For the str '%s':\nC strdup: %s\n", str, dup);
+        char* dup_asm = ft_strdup(str);
+        printf("ft_strdup: %s\n\n", dup_asm);
+        free(dup);
+        free(dup_asm);
+    }
     return 0;
 }
