@@ -67,6 +67,7 @@ neg		REG			; -REG = REG || REG = -REG
 
 ; Compare
 cmp	REG, VALUE		; Set flags used by jmp variants
+test REG, REG 		; same but faster than cmp REG, 0
 
 ; Label
 label:
