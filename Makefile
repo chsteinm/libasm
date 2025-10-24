@@ -39,4 +39,4 @@ fclean: clean
 re : fclean
 	make
 
-.PHONY: all clean fclean re bonus main
+.PHONY: all clean fclean re bonus main main_bonus
