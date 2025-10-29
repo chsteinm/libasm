@@ -18,6 +18,7 @@ ft_atoi_base:
         push    r14
         push    r15
 
+        ; NULL str handle
         xor     rax, rax
         test    rdi, rdi
         jz      .end
@@ -120,8 +121,6 @@ find_index_in_base:
     .end:
         pop rbp
         ret
-
-
 
 is_valid_base:
     ; function prologue
