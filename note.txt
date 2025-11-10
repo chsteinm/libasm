@@ -82,3 +82,9 @@ label:
 		jge	-		; >= VALUE
 
 ; Others
+
+
+
+; GDB
+
+set disassembly-flavor intel ; 
