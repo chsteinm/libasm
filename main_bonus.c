@@ -25,6 +25,18 @@ void test_case(char *str, char *base, int expected, char *description) {
            expected, result, (result == expected) ? "✅ PASS" : "❌ FAIL");
 }
 
+int memcmp_simple(const void *ptr1, const void *ptr2) {
+    const unsigned char *s1 = (const unsigned char *)ptr1;
+    const unsigned char *s2 = (const unsigned char *)ptr2;
+
+    while (*s1 && (*s1 == *s2)) {
+        s1++;
+        s2++;
+    }
+
+    return (int)(*s1) - (int)(*s2);
+}
+
 int main(int ac, char **av) {
     // printf("=== Tests ft_atoi_base ===\n\n");
     
@@ -94,6 +106,8 @@ int main(int ac, char **av) {
     
     printf("\n=== Tests ft_list_size ===\n\n");
     printf("Count = %d (expected 3)\n\n", ft_list_size(list));
-    
+
+    char s1[]="test1";
+    char s2[]="teste";
     return 0;
 }
