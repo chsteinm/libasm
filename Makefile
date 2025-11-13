@@ -2,7 +2,7 @@ NAME = libasm.a
 ASMFLAGS = -felf64
 SRCS = 	strlen strcpy strcmp write read strdup
 OBJ = $(addprefix $(BUILD_DIR)/ft_,$(addsuffix .o,$(SRCS)))
-SRCS_BONUS = atoi_base list_push_front
+SRCS_BONUS = atoi_base list_push_front list_size
 OBJ_BONUS = $(addprefix $(BUILD_DIR)/ft_,$(addsuffix _bonus.o,$(SRCS_BONUS)))
 BUILD_DIR = .build
 -include $(OBJ:.o=.d) $(OBJ_BONUS:.o=.d)

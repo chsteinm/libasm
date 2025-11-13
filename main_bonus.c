@@ -76,26 +76,24 @@ int main(int ac, char **av) {
     
     // printf("=== Tests terminés ===\n");
 
-    printf("=== Tests ft_list_push_front ===\n\n");
+    printf("\n=== Tests ft_list_push_front ===\n\n");
+    
+    t_list *list = NULL;
+    ft_list_push_front(&list, "third");
+    ft_list_push_front(&list, "second");
+    ft_list_push_front(&list, "first");
+
+    printf("List content after pushes: ");
+    t_list *it = list;
+    while (it)
     {
-        t_list *list = NULL;
-        ft_list_push_front(&list, "third");
-        ft_list_push_front(&list, "second");
-        ft_list_push_front(&list, "first");
-
-        printf("List content after pushes: ");
-        t_list *it = list;
-        while (it)
-        {
-            printf("%s -> ", (char*)it->data);
-            it = it->next;
-        }
-        printf("NULL\n");
-
-        int cnt = 0;
-        for (it = list; it; it = it->next)
-            cnt++;
-        printf("Count = %d (expected 3)\n\n", cnt);
+        printf("%s -> ", (char*)it->data);
+        it = it->next;
     }
+    printf("NULL\n");
+    
+    printf("\n=== Tests ft_list_size ===\n\n");
+    printf("Count = %d (expected 3)\n\n", ft_list_size(list));
+    
     return 0;
 }

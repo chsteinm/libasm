@@ -94,6 +94,10 @@ SCASB :
 REPNE / REPNZ : 
  répète l'instruction tant que le drapeau Z est éteint ou au plus RCX fois
  
+CMPSB :
+ compare l'octet en [RSI] avec celui en [RDI]
+ RSI = RSI ± 1
+ RDI = RDI ± 1
 
 ; GDB
 

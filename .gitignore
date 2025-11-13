@@ -4,3 +4,4 @@ libasm.*
 .build/
 .vscode/
 minimain.c
+a.out
