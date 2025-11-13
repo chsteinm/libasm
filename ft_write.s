@@ -12,7 +12,7 @@ ft_write:
         jge     .end
         neg     rax
         mov     rdi, rax
-        sub     rsp, 8
+        sub     rsp, 8          ; alignement on bits%16=0 before call
         call    __errno_location
         add     rsp, 8
         mov     [rax], rdi      ; *errno = error code

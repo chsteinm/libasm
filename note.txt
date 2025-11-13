@@ -81,9 +81,19 @@ label:
 		jg	-		; > VALUE
 		jge	-		; >= VALUE
 
-; Others
+; Array
+MOVSB :
+ byte [RDI] = byte [RSI]
+ RSI = RSI ± 1
+ RDI = RDI ± 1
 
+SCASB : 
+ compare AL et [RDI]
+ RDI ± 1
 
+REPNE / REPNZ : 
+ répète l'instruction tant que le drapeau Z est éteint ou au plus RCX fois
+ 
 
 ; GDB
 
