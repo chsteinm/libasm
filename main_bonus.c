@@ -11,6 +11,7 @@ typedef struct s_list
 	struct s_list	*next;
 }	t_list;
 
+int     ft_strcmp(const char* s1, const char* s2);
 int     ft_atoi_base(char *str, char *base);
 void    ft_list_push_front(t_list **begin_list, void *data);
 int     ft_list_size(t_list *begin_list);
@@ -35,6 +36,74 @@ int memcmp_simple(const void *ptr1, const void *ptr2) {
     }
 
     return (int)(*s1) - (int)(*s2);
+}
+
+void print_list(const char *title, t_list *list)
+{
+    t_list *it = list;
+    printf("\n%s", title);
+    while (it)
+    {
+        printf("%s -> ", (char*)it->data);
+        it = it->next;
+    }
+    printf("NULL\n");
+}
+
+void create_list_from_array(t_list **list, const char **arr, int n)
+{
+    /* push elements so that resulting list order matches arr[0], arr[1], ... */
+    for (int i = n - 1; i >= 0; --i)
+        ft_list_push_front(list, (void*)arr[i]);
+}
+
+void list_sort(t_list **begin, int (*cmp)()) {
+    if (!begin || !*begin)
+        return;
+    int swap = 1;
+    while (swap) {
+        swap = 0;
+        t_list *it = *begin;
+        while (it && it->next) {
+            if (cmp(it->data, it->next->data) > 0) {
+                void *tmp = it->data;
+                it->data = it->next->data;
+                it->next->data = tmp;
+                swap = 1;
+            }
+            it = it->next;
+        }
+    }
+    return;
+}
+
+
+void ft_list_sort_insertion(t_list **begin, int (*cmp)())
+{
+    if (!begin || !*begin)
+        return;
+
+    t_list *sorted = NULL;
+    t_list *curr = *begin;
+    while (curr)
+    {
+        t_list *next = curr->next;
+        if (!sorted || cmp(sorted->data, curr->data) > 0)
+        {
+            curr->next = sorted;
+            sorted = curr;
+        }
+        else
+        {
+            t_list *s = sorted;
+            while (s->next && cmp(s->next->data, curr->data) <= 0)
+                s = s->next;
+            curr->next = s->next;
+            s->next = curr;
+        }
+        curr = next;
+    }
+    *begin = sorted;
 }
 
 int main(int ac, char **av) {
@@ -91,8 +160,9 @@ int main(int ac, char **av) {
     printf("\n=== Tests ft_list_push_front ===\n\n");
     
     t_list *list = NULL;
-    ft_list_push_front(&list, "first");
+    // ft_list_push_front(&list, "first");
     ft_list_push_front(&list, "second");
+    ft_list_push_front(&list, "third");
     ft_list_push_front(&list, "third");
 
     printf("List content after pushes: ");
@@ -117,5 +187,57 @@ int main(int ac, char **av) {
         it = it->next;
     }
     printf("NULL\n");
+
+    printf("\n=== Additional ft_list_sort tests ===\n\n");
+
+    // empty list
+    t_list *empty = NULL;
+    printf("Empty list before: "); print_list("", empty);
+    ft_list_sort(&empty, &memcmp_simple);
+    printf("Empty list after sort: "); print_list("", empty);
+
+    // single element
+    t_list *one = NULL;
+    ft_list_push_front(&one, "solo");
+    printf("Single before: "); print_list("", one);
+    ft_list_sort(&one, &memcmp_simple);
+    printf("Single after: "); print_list("", one);
+
+    // duplicates
+    t_list *dup = NULL;
+    const char *dup_arr[] = {"beta", "alpha", "beta", "gamma"};
+    create_list_from_array(&dup, dup_arr, 4);
+    printf("Duplicates before: "); print_list("", dup);
+    ft_list_sort(&dup, &memcmp_simple);
+    printf("Duplicates after: "); print_list("", dup);
+
+    // numeric strings (lexicographic order)
+    t_list *nums = NULL;
+    t_list *nums1 = NULL;
+    const char *num_arr[] = {"10", "2", "1", "3", "10", "2", "1"};
+    create_list_from_array(&nums, num_arr, 7);
+    create_list_from_array(&nums1, num_arr, 7);
+    printf("Numbers before: "); print_list("", nums);
+    list_sort(&nums1, &memcmp_simple);
+    printf("Numbers after C: "); print_list("", nums1);
+    ft_list_sort(&nums, &memcmp_simple);
+    printf("Numbers after: "); print_list("", nums);
+
+    // larger shuffled list
+    t_list *shuf1 = NULL;
+    t_list *shuf2 = NULL;
+    t_list *shuf = NULL;
+    const char *shuf_arr[] = {"delta", "alpha", "echo", "bravo", "charlie", "alpha"};
+    create_list_from_array(&shuf1, shuf_arr, 6);
+    create_list_from_array(&shuf2, shuf_arr, 6);
+    create_list_from_array(&shuf, shuf_arr, 6);
+    printf("Shuffled before: "); print_list("", shuf);
+    list_sort(&shuf1, &memcmp_simple);
+    printf("Shuffled after C (bubble): "); print_list("", shuf1);
+    ft_list_sort_insertion(&shuf2, &memcmp_simple);
+    // printf("Shuffled after insertion: "); print_list("", shuf2);
+    ft_list_sort(&shuf, &memcmp_simple);
+    printf("Shuffled after (your asm): "); print_list("", shuf);
+
     return 0;
 }

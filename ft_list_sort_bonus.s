@@ -20,43 +20,38 @@ ft_list_sort:
         test    rdi, rdi
         jz      .end            ; if begin_list is NULL, do nothing
 
-        mov     rdi, [rdi]
-        push    rdi
-        push    rsi
-        sub     rsp, 8
-        call    ft_list_size
-        add     rsp, 8
-        pop     r14             ; r14 = cmp()
-        pop     r15             ; r15 = first node
-        mov     r12, rax        ; r12 = number of nodes to compare left        
+        mov     r15, rsi        ; r15 = cmp()
+        mov     rbx, [rdi]      ; rbx = *begin
+        test    rbx, rbx
+        jz      .end
 
     .loop:
-        cmp     r12, 2
-        jl      .end            ; finish if < 2
-        dec     r12
-        mov     r13, r12
-        mov     rbx, r15        ; rbx = current node
-
+        mov     r12, 0          ; r12 = bool
+        mov     r13, rbx        ; r13 = current node
         .inner_loop:
-            test    r13, r13
-            jz      .loop
-            mov     rdi, [rbx]      ; node->data
-            mov     rax, [rbx+8]    ; node->next
-            mov     rsi, [rax]
+            mov     r14, [r13+8]    ; r14 = node->next
+            test    r14, r14
+            jz      .end_inner_loop
+            mov     rdi, [r13]
+            mov     rsi, [r14]
             sub     rsp, 8
-            call    r14
+            call    r15
             add     rsp, 8
-            cmp     rax, 0
-            jle      .inner_loop
+            cmp     eax, 0
+            jle     .next
             ; swap
-            mov     rax, [rbx]      ; tmp node->a
-            mov     rdx, rbx        ; tmp node 
-            mov     rbx, [rbx+8]    ; node->next
-            mov     rcx, [rbx]      ; node->next->b
-            mov     [rdx], rcx      ; node->a = b
-            mov     [rbx], rax      ; node->next->b = a
-            dec     r13
+            mov     rax, [r13]      ; a
+            mov     rdx, [r14]      ; b
+            mov     [r14], rax
+            mov     [r13], rdx
+            mov     r12, 1          ; true
+        .next:
+            mov     r13, [r13+8]
             jmp     .inner_loop
+    .end_inner_loop:
+        test    r12, r12
+        jnz     .loop
+
 
     .end:
         pop r15
