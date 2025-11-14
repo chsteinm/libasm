@@ -91,9 +91,9 @@ int main(int ac, char **av) {
     printf("\n=== Tests ft_list_push_front ===\n\n");
     
     t_list *list = NULL;
-    ft_list_push_front(&list, "third");
-    ft_list_push_front(&list, "second");
     ft_list_push_front(&list, "first");
+    ft_list_push_front(&list, "second");
+    ft_list_push_front(&list, "third");
 
     printf("List content after pushes: ");
     t_list *it = list;
@@ -107,7 +107,15 @@ int main(int ac, char **av) {
     printf("\n=== Tests ft_list_size ===\n\n");
     printf("Count = %d (expected 3)\n\n", ft_list_size(list));
 
-    char s1[]="test1";
-    char s2[]="teste";
+    printf("\n=== Tests ft_list_sort ===\n\n");
+    ft_list_sort(&list, &memcmp_simple);
+    it = list;
+    printf("List content after pushes: ");
+    while (it)
+    {
+        printf("%s -> ", (char*)it->data);
+        it = it->next;
+    }
+    printf("NULL\n");
     return 0;
 }
