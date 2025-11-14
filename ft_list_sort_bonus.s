@@ -19,6 +19,8 @@ ft_list_sort:
         
         test    rdi, rdi
         jz      .end            ; if begin_list is NULL, do nothing
+        test    rsi, rsi
+        jz      .end
 
         mov     r15, rsi        ; r15 = cmp()
         mov     rbx, [rdi]      ; rbx = *begin

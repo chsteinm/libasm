@@ -9,14 +9,16 @@ typedef struct s_list
 {
 	void			*data;
 	struct s_list	*next;
-}	t_list;
 
-int     ft_strcmp(const char* s1, const char* s2);
+} 	t_list;
+
 int     ft_atoi_base(char *str, char *base);
 void    ft_list_push_front(t_list **begin_list, void *data);
 int     ft_list_size(t_list *begin_list);
 void    ft_list_sort(t_list **begin_list, int (*cmp)());
 void    ft_list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *));
+
+/* no-op free function used for tests (do not free string literals) */
 
 void test_case(char *str, char *base, int expected, char *description) {
     int result = ft_atoi_base(str, base);
@@ -54,7 +56,7 @@ void create_list_from_array(t_list **list, const char **arr, int n)
 {
     /* push elements so that resulting list order matches arr[0], arr[1], ... */
     for (int i = n - 1; i >= 0; --i)
-        ft_list_push_front(list, (void*)arr[i]);
+        ft_list_push_front(list, strdup((void*)arr[i]));
 }
 
 void list_sort(t_list **begin, int (*cmp)()) {
@@ -77,33 +79,45 @@ void list_sort(t_list **begin, int (*cmp)()) {
     return;
 }
 
+// void list_remove_if(t_list **begin_list, void *data_ref, int (*cmp)(), void (*free_fct)(void *)) {
+//     if (!begin_list || !*begin_list || !data_ref || !cmp || !free_fct)
+//         return;
+    
+//     t_list *it = *begin_list;
+//     t_list *prev = NULL;
+//     while (it) {
+//         if (!cmp(it->data, data_ref)) {
+//             if (prev) {
+//                 prev->next = it->next;
+//             }
+//             free_fct(it->data);
+//             prev = it->next;
+//             if (*begin_list == it)
+//                 *begin_list = it->next;
+//             free_fct(it);
+//             it = prev;
+//         }
+//         else {
+//             prev = it;
+//             it = it->next;
+//         }
+//     }
+// }
 
-void ft_list_sort_insertion(t_list **begin, int (*cmp)())
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-    if (!begin || !*begin)
-        return;
+	t_list	*tmp;
 
-    t_list *sorted = NULL;
-    t_list *curr = *begin;
-    while (curr)
-    {
-        t_list *next = curr->next;
-        if (!sorted || cmp(sorted->data, curr->data) > 0)
-        {
-            curr->next = sorted;
-            sorted = curr;
-        }
-        else
-        {
-            t_list *s = sorted;
-            while (s->next && cmp(s->next->data, curr->data) <= 0)
-                s = s->next;
-            curr->next = s->next;
-            s->next = curr;
-        }
-        curr = next;
-    }
-    *begin = sorted;
+	if (!lst)
+		return ;
+	while (*lst)
+	{
+		tmp = (*lst)->next;
+		if (del)
+			(*del)((*lst)->data);
+		free(*lst);
+		*lst = tmp;
+	}
 }
 
 int main(int ac, char **av) {
@@ -187,8 +201,7 @@ int main(int ac, char **av) {
         it = it->next;
     }
     printf("NULL\n");
-
-    printf("\n=== Additional ft_list_sort tests ===\n\n");
+    ft_lstclear(&list, NULL);
 
     // empty list
     t_list *empty = NULL;
@@ -202,6 +215,7 @@ int main(int ac, char **av) {
     printf("Single before: "); print_list("", one);
     ft_list_sort(&one, &memcmp_simple);
     printf("Single after: "); print_list("", one);
+    free(one);
 
     // duplicates
     t_list *dup = NULL;
@@ -210,6 +224,7 @@ int main(int ac, char **av) {
     printf("Duplicates before: "); print_list("", dup);
     ft_list_sort(&dup, &memcmp_simple);
     printf("Duplicates after: "); print_list("", dup);
+    ft_lstclear(&dup, &free);
 
     // numeric strings (lexicographic order)
     t_list *nums = NULL;
@@ -222,22 +237,74 @@ int main(int ac, char **av) {
     printf("Numbers after C: "); print_list("", nums1);
     ft_list_sort(&nums, &memcmp_simple);
     printf("Numbers after: "); print_list("", nums);
+    ft_lstclear(&nums1, &free);
+    ft_lstclear(&nums, &free);
 
     // larger shuffled list
     t_list *shuf1 = NULL;
-    t_list *shuf2 = NULL;
     t_list *shuf = NULL;
-    const char *shuf_arr[] = {"delta", "alpha", "echo", "bravo", "charlie", "alpha"};
+    const char *shuf_arr[] = {"delta", "alpha", "echo", "alpha", "alpha", "alpha"};
     create_list_from_array(&shuf1, shuf_arr, 6);
-    create_list_from_array(&shuf2, shuf_arr, 6);
     create_list_from_array(&shuf, shuf_arr, 6);
     printf("Shuffled before: "); print_list("", shuf);
     list_sort(&shuf1, &memcmp_simple);
     printf("Shuffled after C (bubble): "); print_list("", shuf1);
-    ft_list_sort_insertion(&shuf2, &memcmp_simple);
-    // printf("Shuffled after insertion: "); print_list("", shuf2);
     ft_list_sort(&shuf, &memcmp_simple);
     printf("Shuffled after (your asm): "); print_list("", shuf);
+    ft_lstclear(&shuf, &free);
+    ft_lstclear(&shuf1, &free);
+
+    printf("\n=== Tests for list_remove_if ===\n\n");
+
+    // remove 'alpha' from beginning/middle/end and various cases
+    t_list *rm_head = NULL;
+    const char *a1[] = {"alpha", "beta", "gamma"};
+    create_list_from_array(&rm_head, a1, 3);
+    printf("Before remove head: "); print_list("", rm_head);
+    ft_list_remove_if(&rm_head, (void*)"alpha", &memcmp_simple, free);
+    printf("After remove head: "); print_list("", rm_head);
+    ft_lstclear(&rm_head, &free);
+
+    t_list *rm_mid = NULL;
+    const char *a2[] = {"one", "alpha", "two"};
+    create_list_from_array(&rm_mid, a2, 3);
+    printf("Before remove middle: "); print_list("", rm_mid);
+    ft_list_remove_if(&rm_mid, (void*)"alpha", &memcmp_simple, free);
+    printf("After remove middle: "); print_list("", rm_mid);
+    ft_lstclear(&rm_mid, &free);
+
+    t_list *rm_tail = NULL;
+    const char *a3[] = {"a", "b", "alpha"};
+    create_list_from_array(&rm_tail, a3, 3);
+    printf("Before remove tail: "); print_list("", rm_tail);
+    ft_list_remove_if(&rm_tail, (void*)"alpha", &memcmp_simple, free);
+    printf("After remove tail: "); print_list("", rm_tail);
+    ft_lstclear(&rm_tail, &free);
+
+    t_list *rm_all = NULL;
+    const char *a4[] = {"x", "x", "x"};
+    create_list_from_array(&rm_all, a4, 3);
+    printf("Before remove all: "); print_list("", rm_all);
+    ft_list_remove_if(&rm_all, (void*)"x", &memcmp_simple, free);
+    printf("After remove all: "); print_list("", rm_all);
+    ft_lstclear(&rm_all, &free);
+
+    t_list *rm_none = NULL;
+    const char *a5[] = {"f", "r", "e", "e"};
+    create_list_from_array(&rm_none, a5, 4);
+    printf("Before remove none: "); print_list("", rm_none);
+    ft_list_remove_if(&rm_none, (void*)"nope", &memcmp_simple, free);
+    printf("After remove none: "); print_list("", rm_none);
+    char *ptr = rm_none->data;
+    ft_list_remove_if(&rm_none, (void*)"f", &memcmp_simple, NULL);
+    printf("After remove f but with NULL ptr instead of free: "); print_list("", rm_none);
+    free(ptr);
+    ft_lstclear(&rm_none, &free);
+
+    t_list *rm_empty = NULL;
+    printf("Before remove on empty: "); print_list("", rm_empty);
+    ft_list_remove_if(&rm_empty, (void*)"any", &memcmp_simple, free);
+    printf("After remove on empty: "); print_list("", rm_empty);
 
     return 0;
 }
