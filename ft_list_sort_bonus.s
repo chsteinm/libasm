@@ -6,7 +6,7 @@ extern  ft_list_size
 section .text
     global ft_list_sort
 
-ft_list_sort:
+ft_list_sort:                   ; bubble sort
         ; prologue
         push    rbp
         mov     rbp, rsp
@@ -63,21 +63,3 @@ ft_list_sort:
         pop rbx
         pop rbp
         ret
-
-
-
-; void	ft_sort_params(int argc, char **argv)
-; {
-; 	int	i;
-
-; 	while (--argc >= 1)
-; 	{
-; 		i = argc - 1;
-; 		while (i > 0)
-; 		{
-; 			if (ft_strcmp(argv[i], argv[argc]) > 0)
-; 				ft_swap(&argv[i], &argv[argc]);
-; 			i--;
-; 		}
-; 	}
-; }

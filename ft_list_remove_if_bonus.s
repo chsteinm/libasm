@@ -81,5 +81,3 @@ ft_list_remove_if:
         pop rbx
         pop rbp
         ret
-
-        ;TODO : utiliser que la fonction free pour data, si elle n est pas null
