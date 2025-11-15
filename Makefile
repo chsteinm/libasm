@@ -23,7 +23,7 @@ $(BUILD_DIR)/%.o: %.s Makefile
 	@mkdir -p $(BUILD_DIR)
 	nasm $(ASMFLAGS) $< -o $@
 
-# For download the tests for tha mandotary part
+# For download the tests for tha mandatory part
 get_main:
 	curl -fSL https://raw.githubusercontent.com/chsteinm/libasm/master/main.c -o main.c
 
@@ -53,4 +53,4 @@ fclean: clean
 re : fclean
 	make
 
-.PHONY: all clean fclean re bonus main main_bonus
+.PHONY: all clean fclean re bonus main main_bonus get_main get_main_bonus get_notes
