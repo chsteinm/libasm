@@ -11,11 +11,11 @@ ft_read:
         cmp     rax, 0
         jge     .end
         neg     rax
-        mov     rcx, rax
-        sub     rsp, 8
+        mov     rdx, rax
+        push    rdx
         call    __errno_location
-        add     rsp, 8
-        mov     [rax], ecx
+        pop     rdx
+        mov     [rax], edx
         mov     rax, -1
     .end:
         ret
