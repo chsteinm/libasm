@@ -23,10 +23,12 @@ $(BUILD_DIR)/%.o: %.s Makefile
 	@mkdir -p $(BUILD_DIR)
 	nasm $(ASMFLAGS) $< -o $@
 
+get_notes:
+	curl -fSL https://github.com/chsteinm/libasm/blob/master/note.txt -o notes.txt
+
 # For compile and launch the main test
 main: $(NAME) main.c
 	cc -g -o main main.c $(NAME)
-	./main
 
 # For compile and launch the bonus tests.c
 main_bonus: bonus main_bonus.c
