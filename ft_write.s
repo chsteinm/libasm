@@ -12,10 +12,10 @@ ft_write:
         jge     .end
         neg     rax
         mov     rdi, rax
-        sub     rsp, 8          ; alignement on bits%16=0 before call
+        push    rdi
         call    __errno_location
-        add     rsp, 8
-        mov     [rax], rdi      ; *errno = error code
+        pop     rdi
+        mov     [rax], edi      ; *errno = error code (32-bits)
         mov     rax, -1
     .end:
         ret

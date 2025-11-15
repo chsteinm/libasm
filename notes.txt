@@ -49,6 +49,7 @@ pop		REG
 
 ; Set register value
 mov		REG, VALUE	; DEST = VALUE
+MOVZX	REG, VALUE 	; mov with zero-extend (unsigned)
 
 ; Common operations
 add		DEST, VALUE	; DEST = DEST + VALUE
