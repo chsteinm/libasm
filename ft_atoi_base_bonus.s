@@ -3,11 +3,12 @@ extern ft_strlen
 section .text
     global ft_atoi_base
 
-; Main function: int atoi_base(char *str, char *base)
+; int atoi_base(char *str, char *base)
 ; mov r12, rdi        ; r12 = str (1st argument)
 ; mov r13, rsi        ; r13 = base (2nd argument)
 ; mov r14, rax        ; r14 = base_len
 ; mov r15, rdx        ; r15 = sign
+; mov rax, rbx        ; rbx = result
 ft_atoi_base:
         ; prologue
         push    rbp
